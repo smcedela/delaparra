@@ -1,0 +1,57 @@
+%% The following commented packages are included in the Beamer style template
+%%\usepackage{pgfcomp-version-0-65}
+%%\usepackage{xcolor}
+%%\usepackage{graphicx}
+%%\usepackage{pgfplots}
+%%\usepackage{epstopdf}
+%%\usepackage{changepage}
+%%\usepackage{etoolbox}
+%%\usepackage{helvet}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[\iftoggle{lang_eng}{english}{ngerman}]{babel}
+
+\usepackage[justification=centering]{caption} % Justification: center captions by default
+\captionsetup{textfont=scriptsize, font=scriptsize,labelfont=scriptsize}
+\captionsetup[subfigure]{skip=7pt} % vertical spacing between figure and subfigure caption
+\captionsetup{aboveskip=3pt} % vertical spacing between subfigure caption and figure caption (\baselineskip + aboveskip)
+\captionsetup{belowskip=3pt} % vertical spacing between subfigure caption and figure caption (\baselineskip + aboveskip)
+
+%% REMOVE LABELS a), b), ... Put this into figure environments for local settings
+%\captionsetup[figure]{labelformat=empty}
+%\captionsetup[subfigure]{labelformat=empty} 
+%\captionsetup[table]{labelformat=empty}
+%% You can easily hide labels by using \caption*{} instead of \caption{}
+
+%\captionsetup[subfigure]{labelformat=empty}
+%\setbeamerfont{caption}{size=\tiny}
+
+\usepackage{hyperref}
+
+\usepackage{listings} % Für Code
+
+\usepackage[locale=DE]{siunitx} % Für Einheiten
+
+
+\usepackage{mathtools,amssymb,amsmath}
+
+\usepackage{pgfpages} % required for showing notes on the second screen
+
+\usepackage{algorithm} % selber eingebunden
+\usepackage[noend]{algpseudocode} % Alternative Algorithmenumgebung
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+
+\usepackage{booktabs}
+
+\usepackage{subcaption}
+
+% Textbox
+\usepackage{grid-system}
+
+
+\usepackage{ifplatform}
+
+
+
+

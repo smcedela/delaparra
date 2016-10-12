@@ -1,0 +1,456 @@
+\mode<presentation>
+
+%% IF YOU ARE MAKING ANY CHANGES, COMPILE TWICE! 
+%% Tikz requires two compilations with pdf latex in order to get relative positioning information! 
+
+%% REQUIRED PACKAGES
+\RequirePackage{pgfcomp-version-0-65}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{pgfplots}
+\usetikzlibrary{positioning,automata,through,calc,plotmarks,shapes,arrows,
+				decorations.markings,shapes.misc,backgrounds}
+\pgfplotsset{compat=newest} 
+\pgfplotsset{plot coordinates/math parser=false}
+
+\newtoggle{isExternalizeOn} % we create our own toggle since \tikzifexternalizing is not working for me correctly
+\settoggle{isExternalizeOn}{false}
+\newcommand{\externalizeSkipNext}{}
+%\newcommand{\externalizeNext}{} % does not work for me atm.
+\newcommand{\externalizeOn}{}
+\newcommand{\externalizeOff}{}
+\newcommand{\externalizeRemakeNext}{}
+\newcommand{\externalizeRemakeAllFollowing}{}
+
+\newenvironment{externalize}{}{}
+
+\ifnum\pdfshellescape=1
+	% System calls enabled
+	\usepgfplotslibrary{external} 
+	\tikzexternalize[prefix=Abbildungen/tikz-extern/] % folder to store precompiled tikz images (Make sure, folder already exists!!!)
+	\renewcommand{\externalizeSkipNext}{\tikzset{external/export next=false}}
+	%\renewcommand{\externalizeNext}{\tikzset{external/export next}}
+	\renewcommand{\externalizeOn}{\tikzset{external/export=true} \settoggle{isExternalizeOn}{true}}
+	\renewcommand{\externalizeOff}{\tikzset{external/export=false} \settoggle{isExternalizeOn}{false}}
+	\renewcommand{\externalizeRemakeNext}{\tikzset{external/remake next}}
+	\renewcommand{\externalizeRemakeAllFollowing}{\tikzset{external/remake}}
+	
+	\renewenvironment{externalize}
+	{ \tikzset{external/export=true} }
+	{ \iftoggle{isExternalizeOn}{}{\externalizeOff} }
+\fi
+
+\RequirePackage{epstopdf}
+\RequirePackage{changepage}
+
+% Scripts including if/then/else
+\RequirePackage{etoolbox}
+
+
+
+% Graphics path:
+\graphicspath{{./Abbildungen/}}
+
+%% FONTS
+\usefonttheme{professionalfonts}
+%\usefonttheme{serif}
+%\usepackage{fontspec} % Compile with XeLaTex or LuaLaTex to enable TrueType Arial
+%\setmainfont{Arial} 
+\RequirePackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+\setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+\setbeamerfont{title}{size = \huge}
+\setbeamerfont{frametitle}{size = \Large, series=\bfseries}
+
+%% Definitions (Colors etc.) 
+
+\setbeamersize{text margin left=0.6cm,text margin right=0.6cm}
+\setbeamerfont{section in toc}{series=\bfseries}
+
+\definecolor{Ftitle}{rgb}{0, 0, 0} 
+
+\definecolor{RSTgreen}{RGB}{132,184,24}
+\definecolor{RSTorange}{RGB}{255,122,0}
+\definecolor{RSTblue}{RGB}{0, 102, 255} % {139, 186, 255}
+\definecolor{RSTyellow}{RGB}{255, 204, 0}
+\definecolor{Descitem}{RGB}{0, 0, 139} 
+
+
+\definecolor{StdTitle}{RGB}{26, 33, 141}
+\definecolor{StdBody}{RGB}{213,24,0}
+
+\definecolor{AlTitle}{RGB}{255, 190, 190}
+\definecolor{AlBody}{RGB}{213,24,0}
+
+\definecolor{ExTitle}{RGB}{201, 217, 217}
+\definecolor{ExBody}{RGB}{213,24,0}
+
+\setbeamercolor{frametitle}{fg = Ftitle}
+\setbeamercolor{title}{fg = Ftitle}
+
+\setbeamercolor{section in toc}{fg = RSTgreen}
+\setbeamercolor{section in toc shaded}{fg = black} 
+\setbeamercolor{subsection in toc}{fg = RSTorange}
+\setbeamercolor{subsection in toc shaded}{fg = RSTorange} 
+
+\setbeamercolor{item}{fg = black}
+\setbeamercolor{subitem}{fg = black}
+\setbeamercolor{subsubitem}{fg = black}
+\setbeamercolor{enumerate item}{fg = black}
+\setbeamercolor{enumerate subitem}{fg = black}
+\setbeamercolor{description item}{fg = black}
+
+\setbeamercolor{caption}{fg = Ftitle}
+\setbeamercolor{caption name}{fg = Ftitle}
+
+\setbeamercolor{block title}{fg = white, bg = RSTgreen!85!white}
+\setbeamercolor{block body}{bg = RSTgreen!15!white}
+
+\setbeamercolor{block title alerted}{fg=white,bg=RSTorange}
+\setbeamercolor{block body alerted}{fg=black!90,bg=RSTorange!10!white}
+
+\setbeamercolor{block title example}{fg = white, bg = RSTblue}
+\setbeamercolor{block body example}{bg = RSTblue!10!white}
+
+\setbeamercolor{normal text}{fg = Ftitle}
+
+
+
+
+%% HEADLINE
+\setbeamertemplate{headline}[text line]{
+\externalizeSkipNext
+\begin{tikzpicture}[remember picture, overlay]
+{
+	\coordinate [yshift=-0.95cm] (line_start) at (current page.north west);
+	\coordinate [yshift=-0.95cm] (line_end) at (current page.north east);
+	\draw [color=RSTgreen, line width=0.55 mm] (line_start) -- (line_end);
+}
+\end{tikzpicture}
+}
+
+
+%% FOOTLINE
+\setbeamertemplate{footline}[text line]{
+\externalizeSkipNext
+\begin{tikzpicture}[remember picture, overlay]
+
+\node [anchor=south west] at (current page.south west) (tu_logo) {
+\includegraphics[height=0.5cm]{TU_Logo}};
+
+\node [anchor=south east] at (current page.south east) (rst_logo){
+\includegraphics[height=20pt]{RST_Logo}};
+
+\coordinate (line_start) at (tu_logo.north west);
+\coordinate [shift={(0,-0.23)}] (line_end) at (rst_logo.north west);
+
+\draw[color=RSTgreen, line width=0.55 mm] (line_start) |- (line_end);
+
+\end{tikzpicture}
+}
+
+
+
+%% FRAME STYLE
+%\setbeamertemplate{frametitle}[default][center]
+\setbeamertemplate{frametitle}
+{
+	\vspace{-0.4cm}
+	\begin{center}
+		\insertframetitle
+	\end{center}
+	\vspace{-0.5cm}
+}
+
+\setbeamertemplate{navigation symbols}{}
+
+
+
+%% TITLE PAGE STYLE %% 
+
+\setbeamertemplate{title page}{
+\externalizeSkipNext
+
+% Draw color shift / gradient 
+\begin{tikzpicture}[remember picture, overlay]
+   
+ 	 \node [shading = axis,rectangle, left color=black!30!white, right color=white, middle color=black!16!white, shading angle=91, anchor=north west, minimum width=0.8\textwidth, minimum height=2.0cm, shift={(2.2,-4.15)}] (greybox) at (current page.north west){};
+
+% Logo TU
+	\node [shift={(1.0,-0.5)}, anchor=north west] at (current page.north west) {
+		\includegraphics[height=0.7cm]{TU_Logo} };
+
+% Logo RST
+	\node  [shift={(-1.0,-0.4)}, anchor=north east] at (current page.north east) {
+		\includegraphics[height=0.9cm]{RST_Logo} };
+
+% Title Image
+	\node [draw=RSTgreen,  line width=0.6mm, inner sep=0pt, anchor=north west, shift={(1.0,-2)}] at (current page.north west) {
+		\includegraphics[height=3.8cm]{\titleImage} };
+
+% Name, Location and Date
+	\node [anchor = north west] (label_loc) at (greybox.south west) {\scriptsize \titleLocation};
+
+% Title
+	\node [text width = 8.6cm, align=left, anchor = north west] (label_title) at (label_loc.south west) {\bf \titleName};
+
+% Authors
+	\node [text width = 8.6cm, align=left, anchor = north west] at (label_title.south west) {\scriptsize \titleAuthors};
+
+% Footline Prof. Bertram
+	\node [align=left, anchor = south west, shift={(2.2,0)}] at (current page.south west) {
+		\scriptsize Univ.-Prof. Dr.-Ing. Prof. h.c. Dr. h.c. Torsten Bertram\\[-0.2\baselineskip]
+		\scriptsize \iftoggle{lang_eng}{Institute of Control Theory and Systems Engineering
+		}{Lehrstuhl für Regelungssystemtechnik}};
+
+\end{tikzpicture}
+}
+
+% Always plot title at the beginning
+\AtBeginDocument{
+\begin{frame}[plain]
+	\titlepage
+\end{frame} 
+}
+
+%% FINAL SLIDE
+\newcommand{\generateFinalPage}{
+\begin{frame}[plain]
+	\externalizeSkipNext
+	
+	% Draw color shift / gradient 
+	\begin{tikzpicture}[remember picture, overlay]
+	   
+	 	 \node [shading = axis,rectangle, left color=black!30!white, right color=white, middle color=black!16!white, shading angle=91, anchor=north west, minimum width=0.8\textwidth, minimum height=2.0cm, shift={(2.2,-4.15)}] (greybox) at (current page.north west){};
+	
+	% Logo TU
+		\node [shift={(1.0,-0.5)}, anchor=north west] at (current page.north west) {
+			\includegraphics[height=0.7cm]{TU_Logo} };
+	
+	% Logo RST
+		\node  [shift={(-1.0,-0.4)}, anchor=north east] at (current page.north east) {
+			\includegraphics[height=0.9cm]{RST_Logo} };
+	
+	% Title Image
+		\node [draw=RSTgreen,  line width=0.6mm, inner sep=0pt, anchor=north west, shift={(1.0,-2)}](title_fig) at (current page.north west) {
+			\includegraphics[height=3.8cm]{\titleImage} };
+			
+	% Other Images
+		\node [draw=RSTgreen,  line width=0.6mm, inner sep=0pt, anchor=north west, xshift=0.5cm] (top_right_image) at (title_fig.north east) {
+			\includegraphics[height=1.8cm]{\lastImageOtherOne} };
+		\node [draw=RSTgreen,  line width=0.6mm, inner sep=0pt, anchor=south] at (title_fig.south east -| top_right_image) {
+			\includegraphics[height=1.8cm]{\lastImageOtherTwo} };
+	
+	% Thank you
+		\node [text width = 8.6cm, align=left, anchor = north west] (label_title) at (greybox.south west)
+		{\bf \iftoggle{lang_eng}{Thank you for your kind attention!}{Vielen Dank für Ihre Aufmerksamkeit!}};
+	
+	% Footline Prof. Bertram
+		\node [align=left, anchor = south west, shift={(2.2,0)}] at (current page.south west) {
+			\scriptsize Univ.-Prof. Dr.-Ing. Prof. h.c. Dr. h.c. Torsten Bertram\\[-0.2\baselineskip]
+			\scriptsize \iftoggle{lang_eng}{Institute of Control Theory and Systems Engineering
+					}{Lehrstuhl für Regelungssystemtechnik}};
+	
+	\end{tikzpicture}
+\end{frame}
+}
+
+
+%% ITEMIZE AND ENUMERATE
+%\setbeamertemplate{itemize/enumerate body begin}{\setlength{\leftmargini}{0pt}}
+\useinnertheme{rectangles}
+\defbeamertemplate{itemize item}{custom item}{\tiny\raise1.5pt\hbox{$\blacksquare$}} % change bulletsize to a different font
+\defbeamertemplate{itemize subitem}{custom subitem}{\footnotesize\hbox{-}} % change bulletsize to a different font
+\defbeamertemplate{itemize subsubitem}{custom subsubitem}{\footnotesize\raise0.7pt\hbox{\textbullet}} % change bulletsize to a different font
+\setbeamertemplate{itemize item}[custom item]
+\setbeamertemplate{itemize subitem}[custom subitem]
+\setbeamertemplate{itemize subsubitem}[custom subsubitem]
+
+\setbeamertemplate{enumerate item}[default]
+
+
+
+
+
+%% TABLE OF CONTENTS
+\setbeamertemplate{section in toc}{
+
+    \leavevmode\leftskip=2ex%
+%    \llap{%
+%        \usebeamerfont*{section number projected}%
+%        \usebeamercolor{section number projected}%
+%
+%        %\begin{pgfpicture}{-1ex}{0ex}{1ex}{2ex}
+%        %    \color{bg}
+%        %    \pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.4ex}
+%        %    \pgfusepath{stroke}
+%        %    \pgftext[base]{\color{bg}\inserttocsectionnumber}
+%        %\end{pgfpicture}\kern1.25ex%
+%    }%
+	\externalizeSkipNext
+    \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (left_anchor) at (0,0.5);
+    \coordinate (right_anchor) at (0.9\textwidth,-0.15);
+  		\draw [color=RSTgreen, line width=0.2mm] (left_anchor) |- (right_anchor);
+  		%\node [xshift=5cm] {test teafsaf};
+    \end{tikzpicture}
+    \hspace{0.2cm} \inserttocsection\par
+}
+\setbeamertemplate{section in toc shaded} %[default][100]
+{
+	\leavevmode\leftskip=2ex%
+    \externalizeSkipNext
+    \begin{tikzpicture}[remember picture, overlay]
+    \coordinate (left_anchor) at (0,0.5);
+    \coordinate (right_anchor) at (0.9\textwidth,-0.15);
+  		\draw [color=black, line width=0.2mm] (left_anchor) |- (right_anchor);
+  		%\node [xshift=5cm] {test teafsaf};
+    \end{tikzpicture}
+    \hspace{0.2cm} \inserttocsection\par
+}
+
+% Plot Table of contents before each section
+\AtBeginSection[]
+{
+   \begin{frame}[c]
+       \frametitle{\iftoggle{lang_eng}{Outline}{Gliederung}}
+       \tableofcontents[currentsection,sectionstyle=show/shaded, subsectionstyle=hide/hide/hide, subsubsectionstyle=hide/hide/hide]
+   \end{frame}
+}
+
+%% MACROS 
+\newcommand{\shiftleft}[2]{\makebox[0pt][r]{\makebox[#1][l]{#2}}}
+\newcommand{\shiftright}[2]{\makebox[#1][r]{\makebox[0pt][l]{#2}}}
+
+\newcommand{\highlightGreen}[1]{{\bf \textcolor{RSTgreen}{#1}}}
+\newcommand{\highlightOrange}[1]{{\bf \textcolor{RSTorange}{#1}}}
+
+\addtobeamertemplate{block begin}{\setlength\abovedisplayskip{0pt}} % remove spacing befor equations etc if two blocks appear in a row
+
+%\addtobeamertemplate{alertblock begin}{\setlength\abovedisplayskip{0pt}} % remove spacing befor equations etc if two blocks appear in a row
+%\addtobeamertemplate{exampleblock begin}{\setlength\abovedisplayskip{0pt}} % remove spacing befor equations etc if two blocks appear in a row
+
+
+% Usage:
+% \tikzoverlay at (-1cm,-5cm) {content};
+% or
+% \tikzoverlay[text width=5cm] at (-1cm,-5cm) {content};
+\def\tikzoverlay{%
+   \externalizeSkipNext
+   \tikz[baseline, overlay]\node
+}% 
+\def\tikzoverlayAbs{%% must compile twice!
+  \externalizeSkipNext
+   \tikz[baseline, remember picture, overlay]\node
+}% 
+
+% add arrow pins to axis by default
+\tikzset{every axis/.style={
+		axis lines = left % left or middle
+	}
+} 
+
+
+%% SCRIPTS
+
+%http://tex.stackexchange.com/questions/198273/how-do-you-locally-override-cancel-a-shadow
+\makeatletter
+\tikzset{reset preactions/.code={\def\tikz@preactions{}}}
+\makeatother
+
+
+\newlength\figureheight 
+\newlength\figurewidth 
+\newlength\customshift 
+
+\newcommand{\tikzAnimateWorkaround}{\tikzifexternalizing{%
+		Work-around to make animate happy
+	}{}}
+
+\newcommand{\fixSpacing}{\vspace*{-0.9\baselineskip}\setlength\belowdisplayshortskip{0pt}}
+
+
+%% VIDEO
+%% Example: 
+%%	\begin{center}
+%%		\placeVideo[onclick]{VIDEO_PATH}{DEFAULT_IMAGE_PATH}{0.6\linewidth} % onclick or pageopen
+%%	\end{center}
+\makeatletter
+\AtBeginDocument{
+\@ifpackageloaded{media9}
+{
+	\newcommand{\placeVideoLoop}[4][onclick] % first filename, second poster-placeholder, third width,, optional: onclick or pageopen
+	{
+		\includemedia[
+			width=#4,keepaspectratio,
+			addresource=#2, %two video files
+			transparent, %transparent player background
+			activate=#1, % pageopen or onclick
+			passcontext, %show VPlayer’s right-click menu
+			flashvars={
+				source=#2
+				&loop=true % loop video
+				&autoPlay=true
+			}
+			]{\includegraphics{#3}}{VPlayer.swf}
+	}
+	\newcommand{\placeVideo}[4][onclick] % first filename, second poster-placeholder, third width,, optional: onclick or pageopen
+	{
+		\includemedia[
+			width=#4,keepaspectratio,
+			addresource=#2, %two video files
+			transparent, %transparent player background
+			activate=#1, % pageopen or onclick
+			passcontext, %show VPlayer’s right-click menu
+			flashvars={
+				source=#2
+				&loop=false % loop video
+				&autoPlay=true
+			}
+			]{\includegraphics{#3}}{VPlayer.swf}
+	}	
+	
+} {
+	\newcommand{\placeVideoLoop}[4][onclick]{
+	\includegraphics[width=#4]{#3}} % just show placeholder image
+	\newcommand{\placeVideo}[4][onclick]{
+	\includegraphics[width=#4]{#3}} % just show placeholder image
+} 
+}
+\makeatother
+
+
+
+%% TIKZ EXTERNALIZE FIX FOR MAC
+\ifnum\pdfshellescape=1
+	% System calls enabled
+	\usepgfplotslibrary{external} 
+	\tikzexternalize[prefix=Abbildungen/tikz-extern/] % folder to store precompiled tikz images (Make sure, folder already exists!!!)
+	
+	
+	\ifmacosx
+	\tikzset{external/system call={%
+			PATH=/usr/texbin:$PATH pdflatex \tikzexternalcheckshellescape
+			-halt-on-error -interaction=batchmode 
+			-jobname "\image" "\texsource"}}
+	\fi
+	
+	
+	\renewcommand{\externalizeSkipNext}{\tikzset{external/export next=false}}
+	%\renewcommand{\externalizeNext}{\tikzset{external/export next}}
+	\renewcommand{\externalizeOn}{\tikzset{external/export=true} \settoggle{isExternalizeOn}{true}}
+	\renewcommand{\externalizeOff}{\tikzset{external/export=false} \settoggle{isExternalizeOn}{false}}
+	\renewcommand{\externalizeRemakeNext}{\tikzset{external/remake next}}
+	\renewcommand{\externalizeRemakeAllFollowing}{\tikzset{external/remake}}
+	
+	\renewenvironment{externalize}
+	{ \tikzset{external/export=true} }
+	{ \iftoggle{isExternalizeOn}{}{\externalizeOff} }
+\fi 
+
+
+
+
+\mode
+<all>  	  

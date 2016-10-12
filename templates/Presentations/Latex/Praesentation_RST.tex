@@ -1,0 +1,77 @@
+\documentclass[t]{beamer} % t = top alignment for frame content
+
+
+%% IF YOU ARE MAKING ANY CHANGES, COMPILE TWICE! 
+%% Tikz requires two compilations with pdf latex in order to get relative positioning information! 
+
+\usepackage{etoolbox}
+% Switch language (compile twice! -> babel package needs to be reloaded)
+\newtoggle{lang_eng}
+\settoggle{lang_eng}{false} % true: english, false: german (compile twice)
+
+
+%% Include common useful packages
+\input{packages.tex}
+
+%% Include Videos
+%% If you have compilation issues remove packages "l3kernel" and "l3packages" and reinstall them using miktex package manager.
+%% Properly synchronize the package manager before.
+%% Doc:  http://ftp.fau.de/ctan/macros/latex/contrib/media9/doc/media9.pdf
+%% Example at the end of Zusammenfassung.tex (but commented out!)
+%\usepackage{media9}
+
+%% Enable Animations
+%% You can easily create animations in combination with tikz,
+%% Checkout the commented example in Zusammenfassung.tex and uncomment \usepackage{animate}
+%\usepackage{animate}
+
+
+%% Set title image
+\newcommand{\titleImage}{TitelRobotik} % TitelRobotik, TitelAutomotive, TitelMechatronik, TitelEvoAlg, or custom image name!
+\newcommand{\titleLocation}{Name der Veranstaltung, Ort, TT. - TT. Monat JJJJ}
+\newcommand{\titleName}{Titel des Vortrages}
+\newcommand{\titleAuthors}{\underline{Autor}, Koautoren}
+
+\newcommand{\lastImageOtherOne}{TitelMechatronik}
+\newcommand{\lastImageOtherTwo}{TitelAutomotive}
+
+
+\newenvironment{wideitemize}{\itemize\addtolength{\itemsep}{10pt}}{\enditemize}
+\newenvironment{bitemize}{\begin{itemize}[<+->]}{\end{itemize}} % This environment can be used to fade in items subsequently
+
+\mode<presentation>
+{
+	\usetheme{RST}
+	% How should covered items be treated (in bitemize environment or \pause)
+	% Select transparent, invisible or only.
+	% This setting can be overwritten by placing it before the specific code.
+	\setbeamercovered{transparent = 28} % invisible, only
+}
+\setbeameroption{hide notes} % show/hide notes
+\setbeamertemplate{note page}[plain]
+
+%% Highlight text with \highlightGreen{} and \highlightOrange{}!
+
+\begin{document}
+
+% disable externalize by default
+\externalizeOff
+% Best practice is to enable externalization just for selected images using the environment
+%\begin{externalize} \end{externalize} around the tikzpicture (this environment is defined in beamerthemeRST.sty) 
+
+
+
+% Include content
+\input{./Inhalte/Einleitung.tex}
+\input{./Inhalte/Modellbildung.tex}
+\input{./Inhalte/Ergebnisse.tex}
+\input{./Inhalte/Zusammenfassung.tex}
+
+% Generate final page
+\generateFinalPage
+
+% You might add backup slides here ...
+
+
+
+\end{document}

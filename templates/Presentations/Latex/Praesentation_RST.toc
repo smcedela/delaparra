@@ -1,0 +1,6 @@
+\beamer@endinputifotherversion {3.36pt}
+\select@language {ngerman}
+\beamer@sectionintoc {1}{Einleitung}{2}{0}{1}
+\beamer@sectionintoc {2}{Modellbildung}{7}{0}{2}
+\beamer@sectionintoc {3}{Ergebnisse}{10}{0}{3}
+\beamer@sectionintoc {4}{Zusammenfassung}{14}{0}{4}

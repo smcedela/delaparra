@@ -1,0 +1,107 @@
+\section{Zusammenfassung}
+
+
+% Für jede Folie eine Frame-Umgebung erstellen
+% Innerhalb der Frame-Umgebung werden dann die Inhalte geschrieben
+
+
+\begin{frame}
+	\frametitle{Platzhalter}
+
+	% Define block styles
+	\tikzstyle{decision} = [diamond, draw, fill=RSTgreen!50, 
+	    text width=4.0em, text badly centered, node distance=2cm, inner sep=0pt]
+	\tikzstyle{block} = [rectangle, draw, fill=RSTgreen!50, 
+	    text width=5em, text centered, rounded corners, minimum height=2em]
+	\tikzstyle{line} = [draw, -latex']
+	\tikzstyle{cloud} = [draw, ellipse,fill=RSTorange!60, node distance=3cm, minimum height=2em]
+	    
+	\begin{center}
+	\begin{tikzpicture}[node distance = 1.4cm, auto, every node/.style={font=\sffamily\scriptsize}]
+	    % Place nodes
+	    \node [block] (init) {initialize model};
+	    \node [cloud, left of=init] (expert) {expert};
+	    \node [cloud, right of=init] (system) {system};
+	    \node [block, below of=init] (identify) {identify candidate models};
+	    \node [block, below of=identify] (evaluate) {evaluate candidate models};
+	    \node [block, left of=evaluate, node distance=3cm] (update) {update model};
+	    \node [decision, below of=evaluate] (decide) {is best candidate better?};
+	    \node [block, below of=decide, node distance=1.9cm] (stop) {stop};
+	    % Draw edges
+	    \path [line] (init) -- (identify);
+	    \path [line] (identify) -- (evaluate);
+	    \path [line] (evaluate) -- (decide);
+	    \path [line] (decide) -| node [near start] {yes} (update);
+	    \path [line] (update) |- (identify);
+	    \path [line] (decide) -- node {no}(stop);
+	    \path [line,dashed] (expert) -- (init);
+	    \path [line,dashed] (system) -- (init);
+	    \path [line,dashed] (system) |- (evaluate);
+	\end{tikzpicture}
+	\end{center}
+ 		 		
+\end{frame}
+
+\begin{frame}{Weitere Beispiele}
+	\setbeamercovered{transparent} % invisible / transparent
+	\begin{bitemize}
+		\item Dies ist das erste Item.
+		\item Dies ist das zweite Item.
+		\item Dies ist das dritte Item.
+	\end{bitemize}
+	
+	\setbeamercovered{invisible}
+	\pause
+	Es gibt auch einen Pausebefehl!
+
+\end{frame}
+
+%\begin{frame}{Tikz animation example}
+%	\begin{center}
+%	\begin{animateinline}[controls=false,autoplay,palindrome,loop]{10}
+%		\multiframe{50}{nYinc=-0.5+0.02, nAngleA=0+0.5, nAngleB=-180+0.5, nColor=0+2}{
+%		\makebox[0.8\textwidth]{
+%			\begin{tikzpicture}
+%				\tikzstyle{circlestyle}=[gray];
+%				\tikzstyle{trajectory}=[shorten <= 0.1cm, shorten >= 0.1cm];
+%				\node [rectangle, minimum width= 5cm, minimum height = 3cm, anchor = center] at (0,0) {};
+%				\filldraw[circlestyle] (-3,0) circle (0.1cm) coordinate (start) node[above] {\small Start};
+%				\filldraw[circlestyle] (3,0) circle (0.1cm) coordinate (goal) node[above] {\small Goal};
+%				\node[anchor = south] (top) at (0, 0.5) {\small $\tau_1$};
+%				\coordinate (middle) at (0,\nYinc);
+%				\node[anchor = south] (bottom) at (0,-0.5) {\small $\tau_2$};
+%				\draw[trajectory, line width=0.5mm, color=RSTgreen] (start) to[out=0, in=-155]  (top.south) to[out=25, in=180] (goal);
+%				\draw[trajectory, line width=0.4mm, color=RSTgreen!\nColor!RSTorange] (start) to[out=0, in=\nAngleB] (middle) to[out=\nAngleA, in=180] (goal);
+%				\draw[trajectory, line width=0.5mm, color=RSTorange] (start) to[out=0, in=180] (bottom.south) to[out=0, in=180] (goal);]
+%			\end{tikzpicture}
+%			}
+%		}
+%	\end{animateinline}
+%	\end{center}
+%\end{frame}
+
+%\begin{frame}[fragile]{Video}
+%
+%	\begin{center}
+%		\includemedia[
+%			width=0.6\linewidth,keepaspectratio,
+%			addresource=Videos/FILENAME.mp4,
+%			transparent, %transparent player background
+%			activate=onclick, % pageopen or onclick
+%			passcontext, %show VPlayer’s right-click menu
+%			flashvars={
+%				source=VIDEO_PATH
+%				&loop=true % loop video
+%				&autoPlay=true
+%			}
+%		]{\includegraphics{PREVIEW_IMAGE_PATH}}{VPlayer.swf}
+%	\end{center}
+%
+%   BUT ITS'S SMARTER TO USE OUR FANCY MACRO:
+%%	\begin{center}
+%%		\placeVideo[onclick]{VIDEO_PATH}{PREVIEW_IMAGE_PATH}{0.6\linewidth} % onclick or pageopen
+%%	\end{center}
+%%  This macro is able to detect, if the package media9 was loaded properly, otherwise only the preview image will be displayed.
+%
+%
+%\end{frame}
